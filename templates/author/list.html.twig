@@ -10,6 +10,7 @@
 
 <div class="example-wrapper">
     <h1>Authors List</h1>
+    <a href="{{ path('app_author_create') }}">Create New Author</a>
     <div>
     {% set totalBooks = 0 %}
     {% for author in authors %}
@@ -19,6 +20,9 @@
         <p><b>Email : </b> {{ author.email }} </p>
         <p><b>Number of Books : </b> {{ author.nbBooks }} </p>
         <a  href="{{ path('app_author_details', { id : author.id })}}">Details</a>
+        <a  href="{{ path('app_author_update', { id : author.id })}}">Update</a>
+        <a  href="{{ path('app_author_delete', { id : author.id })}}">Delete</a>
+
         </div><hr>
     {% set totalBooks = totalBooks + author.nbBooks %}
     {% endfor %}

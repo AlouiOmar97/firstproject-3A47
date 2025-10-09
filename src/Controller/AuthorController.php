@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Author;
+use App\Form\AddEditAuthorType;
 use App\Repository\AuthorRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -64,8 +66,9 @@ final class AuthorController extends AbstractController
     }
 
     #[Route('/author/add/{email}', name: 'app_author_add')]
-    public function addAuthor($email, EntityManagerInterface $em){
+    public function addAuthor(Request $request,$email, EntityManagerInterface $em){
         $author = new Author();
+        //$author->setEmail($request->get('email'));
         $author->setUsername('Albert Camus');
         $author->setEmail($email);
         $author->setPicture('test.png');
@@ -73,6 +76,23 @@ final class AuthorController extends AbstractController
         $em->persist($author);
         $em->flush();
         dd($author);
+    }
+
+    #[Route('/author/create', name:'app_author_create')]
+    public function createAuthor(Request $request, EntityManagerInterface $em){
+        $author = new Author();
+        //$author->setEmail('test@gmail.commmm');
+        $form= $this->createForm(AddEditAuthorType::class, $author);
+        $form->handleRequest($request);
+        if($form->isSubmitted()){
+            $em->persist($author);
+            $em->flush();
+            return $this->redirectToRoute('app_author_list');
+        }
+        return $this->render('author/form.html.twig', [
+            "title" => "Create Author",
+            "form" => $form
+        ]);
     }
 
     #[Route('/author/edit/{id}', name:'app_author_edit')]
@@ -84,12 +104,30 @@ final class AuthorController extends AbstractController
         dd($author);
     }
 
+    #[Route('/author/update/{id}', name:'app_author_update')]
+    public function updateAuthor($id, Request $request, AuthorRepository $authorRepository, EntityManagerInterface $em){
+        $author = $authorRepository->find($id);
+        //$author->setEmail('test@gmail.commmm');
+        $form= $this->createForm(AddEditAuthorType::class, $author);
+        $form->handleRequest($request);
+        if($form->isSubmitted()){
+            //$em->persist($author);
+            $em->flush();
+            return $this->redirectToRoute('app_author_list');
+        }
+        return $this->render('author/form.html.twig', [
+            "title" => "Update Author",
+            "form" => $form
+        ]);
+    }
+
     #[Route('/author/delete/{id}', name:'app_author_delete')]
     public function deleteAuthor($id, EntityManagerInterface $em, AuthorRepository $authorRepository){
         $author = $authorRepository->find($id);
         $em->remove($author);
         $em->flush();
-        dd("Author Deleted");
+        return $this->redirectToRoute('app_author_list');
+        //dd("Author Deleted");
     }
 
 }
