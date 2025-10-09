@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+   <p><b>Name : </b> {{ name }}  </p> 
+   <p><b>Age : </b> {{ age }} </p>
+   {% set pi = 3.14 %}
+   {% set t = "Bonjourr" %}
+   {% set t1 = ["hello", 5, "ttt"]  %}
+   {% set t2 = { 'nom': 'Ali', 'age': 55} %}
+   {% set t3 = ["hello", 5, "ttt", { 'nom': 'Ali', 'age': 55}] %}
+   {% set parag %}
+   <p>This is a new paragraph.</p>
+   {% endset %}
+   <p>pi: {{ pi }} </p>
+   <p> {{ t }} </p>
+   <p> {{ t1[1] }} </p>
+   <p> {{ t2['nom'] }} </p>
+   <p> {{ t3[3]['age'] }} </p>
+   {{ parag }}
+   {{ parag }}
+   {{ parag }}
+   {{ parag }}
+   {{ parag }}
+
+   <p>{{ "Age : "  ~ t3[3]['age']}}</p>
+
+   {% if products is empty %}
+    <p>There are no products.</p>
+   {% else %}
+   <p>There are some products...</p>
+   {% endif %}
+   {% for product in products %}
+   <div>
+   <p><b>Name : </b>{{ product.name | upper | lower }}</p>
+   <p><b>Price : </b>{{ product.price }}</p>
+   <hr>
+   </div>
+   {% else %}
+    <p>No Products found !</p>
+   {% endfor %}
+</div>
+
+{{ dump(products) }}
+
+<a href="{{path('app_home')}}">To Home</a>
+{% endblock %}
