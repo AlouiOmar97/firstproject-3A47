@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Author;
 use App\Repository\AuthorRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -46,6 +49,47 @@ final class AuthorController extends AbstractController
         $author = $authorRepository->find($id);
         return $this->render('author/details.html.twig', [
             "author" => $author,
+            "title" => "Author Details",
         ]);
     }
+
+    #[Route("/author/search/{username}", name:"app_author_search")]
+    public function searchAuthor($username, AuthorRepository $authorRepository){
+        $author = $authorRepository->findOneByUsername($username);
+        //dd($author);
+        return $this->render('author/details.html.twig', [
+            "author" => $author,
+            "title"=> "Search Author",
+        ]);
+    }
+
+    #[Route('/author/add/{email}', name: 'app_author_add')]
+    public function addAuthor($email, EntityManagerInterface $em){
+        $author = new Author();
+        $author->setUsername('Albert Camus');
+        $author->setEmail($email);
+        $author->setPicture('test.png');
+        $author->setNbBooks(50);
+        $em->persist($author);
+        $em->flush();
+        dd($author);
+    }
+
+    #[Route('/author/edit/{id}', name:'app_author_edit')]
+    public function editAuthor($id, EntityManagerInterface $em, AuthorRepository $authorRepository){
+        $author = $authorRepository->find($id);
+        $author->setNbBooks(150);
+        //$em->persist($author);
+        $em->flush();
+        dd($author);
+    }
+
+    #[Route('/author/delete/{id}', name:'app_author_delete')]
+    public function deleteAuthor($id, EntityManagerInterface $em, AuthorRepository $authorRepository){
+        $author = $authorRepository->find($id);
+        $em->remove($author);
+        $em->flush();
+        dd("Author Deleted");
+    }
+
 }
