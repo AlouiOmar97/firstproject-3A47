@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Books Details{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Books Details</h1>
+    {# 
+    
+    <a href="{{ path('app_book_create') }}">Create New Book</a>
+     #}
+     
+       
+    
+    <div>
+    {% if book is not null %}
+        <div>
+        <img src="{{asset(book.author.picture)}}" alt="{{book.author.username}}" height="150px" width="150px" >   
+        <p><b>Title : </b> {{ book.title }} </p>
+        <p><b>Author : </b> <a href="{{ path('app_author_details', { id : book.author.id }) }}"> {{ book.author.username }} </a> </p>
+        <p><b>Publication Date : </b> {{ book.publicationDate | date("d-m-Y") }} </p>
+        <p><b>Enabled : </b> {{ book.enabled ? 'Yes' : 'No' }} </p>
+        </div><hr>
+    {% else %}
+        <p>No Book Found !</p>
+    {% endif %}
+    </div>
+    <a href="{{ path('app_book_list') }}">Return To List</a>
+</div>
+{% endblock %}
